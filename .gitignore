@@ -1,0 +1,6 @@
+.idea
+*~
+*.csv
+*.rcg
+*.rcl
+__pycache__
