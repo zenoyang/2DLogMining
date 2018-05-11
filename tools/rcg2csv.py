@@ -4,7 +4,7 @@
 rcg2csv: Convert RoboCup Soccer Simulator rcg and rcl files to CSV.
 Copyright (C) 2018 YangZheng
 Data: 2018-05-04
-Version： v1.0.0
+Version： v1.0.1
 Bugs or Suggestions please mail to cookie.yz@qq.com
 """
 
@@ -12,6 +12,7 @@ import sys
 sys.path.append("../lib")
 from world_model import World
 import csv
+import pandas as pd
 
 
 """
@@ -23,79 +24,76 @@ TODO:
 
 class Rcg2csv(object):
     def __init__(self, wm):
-        self.wm = wm
-        self.our_name = self.wm.teamName()
-        self.opp_name = self.wm.opponentTeamName()
+        self.our_name = wm.teamName()
+        self.opp_name = wm.opponentTeamName()
         self.rowlist = self.getRowList()
 
     def getRowList(self):
         rowlist = []
 
-        while self.wm.time().kick_off() <= self.wm.time().cycle() and self.wm.time().cycle() <= 2:
-            # player_num = '{}_{}'
+        # while wm.time().kick_off() <= wm.time().cycle() and wm.time().cycle() <= wm.time().time_over():
+        while wm.time().kick_off() <= wm.time().cycle() and wm.time().cycle() <= 10:    # test
             """add our player row"""
             for unum in range(1, 12):
-                kick = self.wm.ourPlayer(unum, wm.time().cycle()).kick()
+                kick = wm.ourPlayer(unum, wm.time().cycle()).kick()
                 row = {
-                    'cycle': self.wm.time().cycle(),
-                    # 'player_num': player_num.format(self.our_name, unum),
+                    'cycle': wm.time().cycle(),
                     'player_num': unum,
-                    'ball_x': self.wm.ball(self.wm.time().cycle()).x,
-                    'ball_y': self.wm.ball(self.wm.time().cycle()).y,
-                    'ball_vx': self.wm.ball(self.wm.time().cycle()).vx,
-                    'ball_vy': self.wm.ball(self.wm.time().cycle()).vy,
-                    'player_x': self.wm.ourPlayer(unum).x,
-                    'player_y': self.wm.ourPlayer(unum).y,
-                    'player_vx': self.wm.ourPlayer(unum, wm.time().cycle()).vx,
-                    'player_vy': self.wm.ourPlayer(unum, wm.time().cycle()).vy,
+                    'ball_x': wm.ball(wm.time().cycle()).x,
+                    'ball_y': wm.ball(wm.time().cycle()).y,
+                    'ball_vx': wm.ball(wm.time().cycle()).vx,
+                    'ball_vy': wm.ball(wm.time().cycle()).vy,
+                    'player_x': wm.ourPlayer(unum).x,
+                    'player_y': wm.ourPlayer(unum).y,
+                    'player_vx': wm.ourPlayer(unum, wm.time().cycle()).vx,
+                    'player_vy': wm.ourPlayer(unum, wm.time().cycle()).vy,
                     'kick': ','.join(kick) if kick is not None else None,
-                    'dash': self.wm.ourPlayer(unum, wm.time().cycle()).dash(),
-                    'turn': self.wm.ourPlayer(unum, wm.time().cycle()).turn(),
-                    'turn_neck': self.wm.ourPlayer(unum, wm.time().cycle()).turn_neck(),
-                    'tackle': self.wm.ourPlayer(unum, wm.time().cycle()).tackle(),
-                    'change_view': self.wm.ourPlayer(unum, wm.time().cycle()).change_view(),
-                    'attentionto': self.wm.ourPlayer(unum, wm.time().cycle()).attentionto(),
-                    'pointto': self.wm.ourPlayer(unum, wm.time().cycle()).pointto(),
-                    'say': self.wm.ourPlayer(unum, wm.time().cycle()).say(),
+                    'dash': wm.ourPlayer(unum, wm.time().cycle()).dash(),
+                    'turn': wm.ourPlayer(unum, wm.time().cycle()).turn(),
+                    'turn_neck': wm.ourPlayer(unum, wm.time().cycle()).turn_neck(),
+                    'tackle': wm.ourPlayer(unum, wm.time().cycle()).tackle(),
+                    'change_view': wm.ourPlayer(unum, wm.time().cycle()).change_view(),
+                    'attentionto': wm.ourPlayer(unum, wm.time().cycle()).attentionto(),
+                    'pointto': wm.ourPlayer(unum, wm.time().cycle()).pointto(),
+                    'say': wm.ourPlayer(unum, wm.time().cycle()).say(),
                     'team_name': self.our_name
                 }
                 rowlist.append(row)
 
             """add their player row"""
             for unum in range(1, 12):
-                kick = self.wm.theirPlayer(unum, wm.time().cycle()).kick()
+                kick = wm.theirPlayer(unum, wm.time().cycle()).kick()
                 row = {
-                    'cycle': self.wm.time().cycle(),
-                    # 'player_num': player_num.format(self.opp_name, unum),
+                    'cycle': wm.time().cycle(),
                     'player_num': unum,
-                    'ball_x': self.wm.ball(self.wm.time().cycle()).x,
-                    'ball_y': self.wm.ball(self.wm.time().cycle()).y,
-                    'ball_vx': self.wm.ball(self.wm.time().cycle()).vx,
-                    'ball_vy': self.wm.ball(self.wm.time().cycle()).vy,
-                    'player_x': self.wm.theirPlayer(unum).x,
-                    'player_y': self.wm.theirPlayer(unum).y,
-                    'player_vx': self.wm.theirPlayer(unum, wm.time().cycle()).vx,
-                    'player_vy': self.wm.theirPlayer(unum, wm.time().cycle()).vy,
+                    'ball_x': wm.ball(wm.time().cycle()).x,
+                    'ball_y': wm.ball(wm.time().cycle()).y,
+                    'ball_vx': wm.ball(wm.time().cycle()).vx,
+                    'ball_vy': wm.ball(wm.time().cycle()).vy,
+                    'player_x': wm.theirPlayer(unum).x,
+                    'player_y': wm.theirPlayer(unum).y,
+                    'player_vx': wm.theirPlayer(unum, wm.time().cycle()).vx,
+                    'player_vy': wm.theirPlayer(unum, wm.time().cycle()).vy,
                     'kick': ','.join(kick) if kick is not None else None,
-                    'dash': self.wm.theirPlayer(unum, wm.time().cycle()).dash(),
-                    'turn': self.wm.theirPlayer(unum, wm.time().cycle()).turn(),
-                    'turn_neck': self.wm.theirPlayer(unum, wm.time().cycle()).turn_neck(),
-                    'tackle': self.wm.theirPlayer(unum, wm.time().cycle()).tackle(),
-                    'change_view': self.wm.theirPlayer(unum, wm.time().cycle()).change_view(),
-                    'attentionto': self.wm.theirPlayer(unum, wm.time().cycle()).attentionto(),
-                    'pointto': self.wm.theirPlayer(unum, wm.time().cycle()).pointto(),
-                    'say': self.wm.theirPlayer(unum, wm.time().cycle()).say(),
+                    'dash': wm.theirPlayer(unum, wm.time().cycle()).dash(),
+                    'turn': wm.theirPlayer(unum, wm.time().cycle()).turn(),
+                    'turn_neck': wm.theirPlayer(unum, wm.time().cycle()).turn_neck(),
+                    'tackle': wm.theirPlayer(unum, wm.time().cycle()).tackle(),
+                    'change_view': wm.theirPlayer(unum, wm.time().cycle()).change_view(),
+                    'attentionto': wm.theirPlayer(unum, wm.time().cycle()).attentionto(),
+                    'pointto': wm.theirPlayer(unum, wm.time().cycle()).pointto(),
+                    'say': wm.theirPlayer(unum, wm.time().cycle()).say(),
                     'team_name': self.opp_name
                 }
                 rowlist.append(row)
 
-            self.wm.gameMode().UpdatePlayMode()
-            self.wm.time().addTime()
+            wm.gameMode().UpdatePlayMode()
+            wm.time().addTime()
 
         return rowlist
 
     def execute(self):
-        f = open('../csv/{}.csv1'.format(self.wm.file_name), 'a')
+        f = open('../csv/{}.csv'.format(wm.file_name), 'a')
         writer = csv.writer(f, lineterminator='\n')
         writer.writerow(
             ['cycle', 'team_name', 'player_num', 'ball_x', 'ball_y', 'ball_vx', 'ball_vy', 'player_x', 'player_y', 'player_vx',
@@ -104,7 +102,7 @@ class Rcg2csv(object):
         for i in self.rowlist:
             writer.writerow(
                 [i['cycle'], i['team_name'], i['player_num'], i['ball_x'], i['ball_y'], i['ball_vx'], i['ball_vy'],
-                 i['player_x'],i['player_y'], i['player_vx'], i['player_vy'], i['kick'], i['dash'], i['turn'],
+                 i['player_x'], i['player_y'], i['player_vx'], i['player_vy'], i['kick'], i['dash'], i['turn'],
                  i['turn_neck'], i['tackle'], i['change_view'], i['attentionto'], i['pointto'], i['say']])
 
         f.close()
