@@ -1,3 +1,5 @@
+
+
 # RoboCup2DLogMining
 analyze RoboCup Soccer Simulator rcg and rcl files
 
@@ -12,6 +14,6 @@ analyze RoboCup Soccer Simulator rcg and rcl files
  - log目录存放原始的rcg和rcl文件  
  - csv目录存放由rcg和rcl文件解析提取合成的csv文件  
  - scripts目录存放一些日志分析统计的脚本  
-    - count_through_pass.py:
+    - count_tackle.py:
  - jupyber目录存放一些ipynb文件  
- - img目录存放图片  
+ - img目录存放图片
